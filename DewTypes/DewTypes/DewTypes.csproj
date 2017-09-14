@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Andrea Vincenzo Abbondanza</Authors>
+    <Company>Dew Studio</Company>
+    <Product>Dew Types</Product>
+    <Description>A set of types for .net standard</Description>
+    <PackageProjectUrl>https://github.com/andreabbondanza/DewTypes</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/andreabbondanza/DewTypes/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/andreabbondanza/DewTypes</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>.net standard, c#, types, string, dew</PackageTags>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageIconUrl>http://andrewdev.eu/wp-content/uploads/2016/08/OnlyLogo.png</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\DewTypes.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DewStrings" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>
