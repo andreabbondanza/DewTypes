@@ -16,7 +16,7 @@ namespace DewCore.Types
             public Exception Exception { get; set; }
         }
         /// <summary>
-        /// Dew Double
+        /// Dew String
         /// </summary>
         public class DewString : DewBase
         {
@@ -30,40 +30,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewString a, DewString b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewString a, DewString b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewString a, DewString b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewString a, DewString b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewString a, bool b)
-            {
-                return b == (a.Value.Length > 0);
-            }
+            public static DewBool operator ==(DewString a, bool b) => b == (a.Value.Length > 0);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewString a, bool b)
-            {
-                return b == (a.Value.Length <= 0);
-            }
+            public static DewBool operator !=(DewString a, bool b) => b == (a.Value.Length <= 0);
             /// <summary>
             /// 
             /// </summary>
@@ -149,60 +137,39 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewString value)
-            {
-                return value.Value.Length > 0;
-            }
+            public static implicit operator bool(DewString value) => value.Value.Length > 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewString value)
-            {
-                return value.Value.ToLong();
-            }
+            public static implicit operator long(DewString value) => value.Value.ToLong();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewString value)
-            {
-                return value.Value.ToInt();
-            }
+            public static implicit operator int(DewString value) => value.Value.ToInt();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewString value)
-            {
-                return byte.Parse(value.Value);
-            }
+            public static implicit operator byte(DewString value) => byte.Parse(value.Value);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewString value)
-            {
-                return short.Parse(value.Value);
-            }
+            public static implicit operator short(DewString value) => short.Parse(value.Value);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewString value)
-            {
-                return sbyte.Parse(value.Value);
-            }
+            public static implicit operator sbyte(DewString value) => sbyte.Parse(value.Value);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewString operator +(DewString value, DewString value1)
-            {
-                return value.Value + value1.Value;
-            }
+            public static DewString operator +(DewString value, DewString value1) => value.Value + value1.Value;
             /// <summary>
             /// Remove all character from second string to first string
             /// </summary>
@@ -259,40 +226,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewDouble a, DewDouble b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewDouble a, DewDouble b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewDouble a, DewDouble b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewDouble a, DewDouble b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewDouble a, bool b)
-            {
-                return b == (a.Value > 0);
-            }
+            public static DewBool operator ==(DewDouble a, bool b) => b == (a.Value > 0);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewDouble a, bool b)
-            {
-                return b == (a.Value <= 0);
-            }
+            public static DewBool operator !=(DewDouble a, bool b) => b == (a.Value <= 0);
 
             /// <summary>
             /// 
@@ -379,108 +334,72 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewDouble value)
-            {
-                return value.Value > 0;
-            }
+            public static implicit operator bool(DewDouble value) => value.Value > 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewDouble value)
-            {
-                return (long)value.Value;
-            }
+            public static implicit operator long(DewDouble value) => (long)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewDouble value)
-            {
-                return (int)value.Value;
-            }
+            public static implicit operator int(DewDouble value) => (int)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewDouble value)
-            {
-                return (byte)value.Value;
-            }
+            public static implicit operator byte(DewDouble value) => (byte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewDouble value)
-            {
-                return (short)value.Value;
-            }
+            public static implicit operator short(DewDouble value) => (short)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewDouble value)
-            {
-                return (sbyte)value.Value;
-            }
+            public static implicit operator sbyte(DewDouble value) => (sbyte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator string(DewDouble value)
-            {
-                return value.Value.ToString();
-            }
+            public static implicit operator string(DewDouble value) => value.Value.ToString();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewDouble operator +(DewDouble value, DewDouble value1)
-            {
-                return value.Value + value1.Value;
-            }
+            public static DewDouble operator +(DewDouble value, DewDouble value1) => value.Value + value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewDouble operator *(DewDouble value, DewDouble value1)
-            {
-                return value.Value * value1.Value;
-            }
+            public static DewDouble operator *(DewDouble value, DewDouble value1) => value.Value * value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewDouble operator %(DewDouble value, DewDouble value1)
-            {
-                return value.Value % value1.Value;
-            }
+            public static DewDouble operator %(DewDouble value, DewDouble value1) => value.Value % value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewDouble operator /(DewDouble value, DewDouble value1)
-            {
-                return value.Value / value1.Value;
-            }
+            public static DewDouble operator /(DewDouble value, DewDouble value1) => value.Value / value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewDouble operator -(DewDouble value, DewDouble value1)
-            {
-                return value.Value - value1.Value;
-            }
+            public static DewDouble operator -(DewDouble value, DewDouble value1) => value.Value - value1.Value;
             /// <summary>
             /// Equals
             /// </summary>
@@ -522,40 +441,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewFloat a, DewFloat b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewFloat a, DewFloat b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewFloat a, DewFloat b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewFloat a, DewFloat b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewFloat a, bool b)
-            {
-                return b == (a.Value > 0);
-            }
+            public static DewBool operator ==(DewFloat a, bool b) => b == (a.Value > 0);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewFloat a, bool b)
-            {
-                return b == (a.Value <= 0);
-            }
+            public static DewBool operator !=(DewFloat a, bool b) => b == (a.Value <= 0);
             /// <summary>
             /// 
             /// </summary>
@@ -641,124 +548,82 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewFloat value)
-            {
-                return value.Value > 0;
-            }
+            public static implicit operator bool(DewFloat value) => value.Value > 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewFloat value)
-            {
-                return (long)value.Value;
-            }
+            public static implicit operator long(DewFloat value) => (long)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator float(DewFloat value)
-            {
-                return value.Value;
-            }
+            public static implicit operator float(DewFloat value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator double(DewFloat value)
-            {
-                return value.Value;
-            }
+            public static implicit operator double(DewFloat value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewFloat value)
-            {
-                return (int)value.Value;
-            }
+            public static implicit operator int(DewFloat value) => (int)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewFloat value)
-            {
-                return (byte)value.Value;
-            }
+            public static implicit operator byte(DewFloat value) => (byte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewFloat value)
-            {
-                return (short)value.Value;
-            }
+            public static implicit operator short(DewFloat value) => (short)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewFloat value)
-            {
-                return (sbyte)value.Value;
-            }
+            public static implicit operator sbyte(DewFloat value) => (sbyte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator string(DewFloat value)
-            {
-                return value.Value.ToString();
-            }
+            public static implicit operator string(DewFloat value) => value.Value.ToString();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewFloat operator +(DewFloat value, DewFloat value1)
-            {
-                return value.Value + value1.Value;
-            }
+            public static DewFloat operator +(DewFloat value, DewFloat value1) => value.Value + value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewFloat operator *(DewFloat value, DewFloat value1)
-            {
-                return value.Value * value1.Value;
-            }
+            public static DewFloat operator *(DewFloat value, DewFloat value1) => value.Value * value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewFloat operator %(DewFloat value, DewFloat value1)
-            {
-                return value.Value % value1.Value;
-            }
+            public static DewFloat operator %(DewFloat value, DewFloat value1) => value.Value % value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewFloat operator /(DewFloat value, DewFloat value1)
-            {
-                return value.Value / value1.Value;
-            }
+            public static DewFloat operator /(DewFloat value, DewFloat value1) => value.Value / value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewFloat operator -(DewFloat value, DewFloat value1)
-            {
-                return value.Value - value1.Value;
-            }
+            public static DewFloat operator -(DewFloat value, DewFloat value1) => value.Value - value1.Value;
             /// <summary>
             /// Equals
             /// </summary>
@@ -800,40 +665,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewInt a, DewInt b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewInt a, DewInt b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewInt a, DewInt b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewInt a, DewInt b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewInt a, bool b)
-            {
-                return b == (a.Value > 0);
-            }
+            public static DewBool operator ==(DewInt a, bool b) => b == (a.Value > 0);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewInt a, bool b)
-            {
-                return b == (a.Value <= 0);
-            }
+            public static DewBool operator !=(DewInt a, bool b) => b == (a.Value <= 0);
             /// <summary>
             /// 
             /// </summary>
@@ -919,124 +772,82 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewInt value)
-            {
-                return value.Value > 0;
-            }
+            public static implicit operator bool(DewInt value) => value.Value > 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewInt value)
-            {
-                return value.Value;
-            }
+            public static implicit operator long(DewInt value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewInt value)
-            {
-                return value.Value;
-            }
+            public static implicit operator int(DewInt value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewInt value)
-            {
-                return (byte)value.Value;
-            }
+            public static implicit operator byte(DewInt value) => (byte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewInt value)
-            {
-                return (short)value.Value;
-            }
+            public static implicit operator short(DewInt value) => (short)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewInt value)
-            {
-                return (sbyte)value.Value;
-            }
+            public static implicit operator sbyte(DewInt value) => (sbyte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator double(DewInt value)
-            {
-                return value.Value;
-            }
+            public static implicit operator double(DewInt value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator float(DewInt value)
-            {
-                return value.Value;
-            }
+            public static implicit operator float(DewInt value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator string(DewInt value)
-            {
-                return value.Value.ToString();
-            }
+            public static implicit operator string(DewInt value) => value.Value.ToString();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewInt operator +(DewInt value, DewInt value1)
-            {
-                return value.Value + value1.Value;
-            }
+            public static DewInt operator +(DewInt value, DewInt value1) => value.Value + value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewInt operator *(DewInt value, DewInt value1)
-            {
-                return value.Value * value1.Value;
-            }
+            public static DewInt operator *(DewInt value, DewInt value1) => value.Value * value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewInt operator %(DewInt value, DewInt value1)
-            {
-                return value.Value % value1.Value;
-            }
+            public static DewInt operator %(DewInt value, DewInt value1) => value.Value % value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewInt operator /(DewInt value, DewInt value1)
-            {
-                return value.Value / value1.Value;
-            }
+            public static DewInt operator /(DewInt value, DewInt value1) => value.Value / value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewInt operator -(DewInt value, DewInt value1)
-            {
-                return value.Value - value1.Value;
-            }
+            public static DewInt operator -(DewInt value, DewInt value1) => value.Value - value1.Value;
             /// <summary>
             /// Equals
             /// </summary>
@@ -1078,40 +889,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewLong a, DewLong b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewLong a, DewLong b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewLong a, DewLong b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewLong a, DewLong b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewLong a, bool b)
-            {
-                return b == (a.Value > 0);
-            }
+            public static DewBool operator ==(DewLong a, bool b) => b == (a.Value > 0);
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewLong a, bool b)
-            {
-                return b == (a.Value <= 0);
-            }
+            public static DewBool operator !=(DewLong a, bool b) => b == (a.Value <= 0);
             /// <summary>
             /// 
             /// </summary>
@@ -1197,124 +996,82 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewLong value)
-            {
-                return value.Value > 0;
-            }
+            public static implicit operator bool(DewLong value) => value.Value > 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewLong value)
-            {
-                return value.Value;
-            }
+            public static implicit operator long(DewLong value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewLong value)
-            {
-                return (int)value.Value;
-            }
+            public static implicit operator int(DewLong value) => (int)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewLong value)
-            {
-                return (byte)value.Value;
-            }
+            public static implicit operator byte(DewLong value) => (byte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewLong value)
-            {
-                return (short)value.Value;
-            }
+            public static implicit operator short(DewLong value) => (short)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator double(DewLong value)
-            {
-                return value.Value;
-            }
+            public static implicit operator double(DewLong value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator float(DewLong value)
-            {
-                return value.Value;
-            }
+            public static implicit operator float(DewLong value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator string(DewLong value)
-            {
-                return value.Value.ToString();
-            }
+            public static implicit operator string(DewLong value) => value.Value.ToString();
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewLong value)
-            {
-                return (sbyte)value.Value;
-            }
+            public static implicit operator sbyte(DewLong value) => (sbyte)value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewLong operator +(DewLong value, DewLong value1)
-            {
-                return value.Value + value1.Value;
-            }
+            public static DewLong operator +(DewLong value, DewLong value1) => value.Value + value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewLong operator *(DewLong value, DewLong value1)
-            {
-                return value.Value * value1.Value;
-            }
+            public static DewLong operator *(DewLong value, DewLong value1) => value.Value * value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewLong operator %(DewLong value, DewLong value1)
-            {
-                return value.Value % value1.Value;
-            }
+            public static DewLong operator %(DewLong value, DewLong value1) => value.Value % value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewLong operator /(DewLong value, DewLong value1)
-            {
-                return value.Value / value1.Value;
-            }
+            public static DewLong operator /(DewLong value, DewLong value1) => value.Value / value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewLong operator -(DewLong value, DewLong value1)
-            {
-                return value.Value - value1.Value;
-            }
+            public static DewLong operator -(DewLong value, DewLong value1) => value.Value - value1.Value;
             /// <summary>
             /// Equals
             /// </summary>
@@ -1356,40 +1113,28 @@ namespace DewCore.Types
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewBool a, DewBool b)
-            {
-                return b.Value == a.Value;
-            }
+            public static DewBool operator ==(DewBool a, DewBool b) => b.Value == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewBool a, DewBool b)
-            {
-                return b.Value != a.Value;
-            }
+            public static DewBool operator !=(DewBool a, DewBool b) => b.Value != a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator ==(DewBool a, bool b)
-            {
-                return b == a.Value;
-            }
+            public static DewBool operator ==(DewBool a, bool b) => b == a.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="a"></param>
             /// <param name="b"></param>
             /// <returns></returns>
-            public static DewBool operator !=(DewBool a, bool b)
-            {
-                return b != a.Value;
-            }
+            public static DewBool operator !=(DewBool a, bool b) => b != a.Value;
             /// <summary>
             /// 
             /// </summary>
@@ -1448,70 +1193,46 @@ namespace DewCore.Types
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator bool(DewBool value)
-            {
-                return value.Value;
-            }
+            public static implicit operator bool(DewBool value) => value.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator long(DewBool value)
-            {
-                return value.Value ? 1 : 0;
-            }
+            public static implicit operator long(DewBool value) => value.Value ? 1 : 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator int(DewBool value)
-            {
-                return value.Value ? 1 : 0;
-            }
+            public static implicit operator int(DewBool value) => value.Value ? 1 : 0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator byte(DewBool value)
-            {
-                return value.Value ? (byte)1 : (byte)0;
-            }
+            public static implicit operator byte(DewBool value) => value.Value ? (byte)1 : (byte)0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator short(DewBool value)
-            {
-                return value.Value ? (short)1 : (short)0;
-            }
+            public static implicit operator short(DewBool value) => value.Value ? (short)1 : (short)0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
-            public static implicit operator sbyte(DewBool value)
-            {
-                return value.Value ? (sbyte)1 : (sbyte)0;
-            }
+            public static implicit operator sbyte(DewBool value) => value.Value ? (sbyte)1 : (sbyte)0;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewBool operator +(DewBool value, DewBool value1)
-            {
-                return value.Value || value1.Value;
-            }
+            public static DewBool operator +(DewBool value, DewBool value1) => value.Value || value1.Value;
             /// <summary>
             /// 
             /// </summary>
             /// <param name="value"></param>
             /// <param name="value1"></param>
             /// <returns></returns>
-            public static DewBool operator *(DewBool value, DewBool value1)
-            {
-                return value.Value && value1.Value;
-            }
+            public static DewBool operator *(DewBool value, DewBool value1) => value.Value && value1.Value;
             /// <summary>
             /// Equals
             /// </summary>
