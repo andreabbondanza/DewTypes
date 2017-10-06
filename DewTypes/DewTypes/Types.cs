@@ -1427,10 +1427,10 @@ namespace DewCore.Abstract.Types
         {
             var properties = Source.GetType().GetRuntimeProperties();
             T result = default(T);
-            var prop = properties.FirstOrDefault(x => x.GetValue(Source).GetType() == typeof(T));
+            PropertyInfo prop = null;
             foreach (var item in properties)
             {
-                var a = item.GetValue(Source).GetType();
+                var a = item.PropertyType;
                 var b = typeof(T);
                 if (a == b)
                     prop = item;
