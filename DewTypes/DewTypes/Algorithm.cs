@@ -10,13 +10,26 @@ namespace DewCore.Algorithms.Sort
     /// </summary>
     public class HeapSort
     {
+        /// <summary>
+        /// Enum order
+        /// </summary>
         public enum Order
         {
+            /// <summary>
+            /// Ascending
+            /// </summary>
             Asc,
+            /// <summary>
+            /// Descending
+            /// </summary>
             Desc
         }
         private static HeapSort _sorter = null;
         private int heapSize;
+        /// <summary>
+        /// Return a sorter istance
+        /// </summary>
+        /// <returns></returns>
 
         public static HeapSort GetSorter()
         {
@@ -83,6 +96,7 @@ namespace DewCore.Algorithms.Sort
         /// <typeparam name="T">Collection type</typeparam>
         /// <typeparam name="TResult">Result collection type</typeparam>
         /// <param name="coll">collection</param>
+        /// <param name="o">order type</param>
         /// <returns></returns>
         public TResult PerformHeapSortGeneric<T, TResult>(ICollection<T> coll, Order o = Order.Asc) where T : IComparable<T> where TResult : class, ICollection<T>, new()
         {
@@ -158,6 +172,7 @@ namespace DewCore.Algorithms.Sort
         /// <typeparam name="T">Collection type</typeparam>
         /// <typeparam name="TResult">Result collection type</typeparam>
         /// <param name="coll">collection</param>
+        /// <param name="o">order type</param>
         /// <returns></returns>
         public TResult PerformHeapSortBaseType<T, TResult>(ICollection<T> coll, Order o = Order.Asc) where T : IComparable where TResult : class, ICollection<T>, new()
         {
