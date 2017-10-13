@@ -10,6 +10,11 @@ namespace DewCore.Algorithms.Sort
     /// </summary>
     public class HeapSort
     {
+        public enum Order
+        {
+            Asc,
+            Desc
+        }
         private static HeapSort _sorter = null;
         private int heapSize;
 
@@ -21,12 +26,12 @@ namespace DewCore.Algorithms.Sort
 
         }
 
-        private void BuildHeap<T>(T[] arr) where T : IComparable<T>
+        private void BuildHeap<T>(T[] arr,Order o) where T : IComparable<T>
         {
             heapSize = arr.Length - 1;
             for (int i = heapSize / 2; i >= 0; i--)
             {
-                Heapify(arr, i);
+                Heapify(arr, i,o);
             }
         }
 
@@ -36,26 +41,40 @@ namespace DewCore.Algorithms.Sort
             arr[x] = arr[y];
             arr[y] = temp;
         }
-        private void Heapify<T>(T[] arr, int index) where T : IComparable<T>
+        private void Heapify<T>(T[] arr, int index, Order o) where T : IComparable<T>
         {
             int left = 2 * index;
             int right = 2 * index + 1;
             int largest = index;
-
-            if (left <= heapSize && arr[left].CompareTo(arr[index]) > 0)
+            if (o == Order.Asc)
             {
-                largest = left;
+                if (left <= heapSize && arr[left].CompareTo(arr[index]) > 0)
+                {
+                    largest = left;
+                }
+
+                if (right <= heapSize && arr[right].CompareTo(arr[largest]) > 0)
+                {
+                    largest = right;
+                }
             }
-
-            if (right <= heapSize && arr[right].CompareTo(arr[largest]) > 0)
+            else
             {
-                largest = right;
+                if (left <= heapSize && arr[left].CompareTo(arr[index]) < 0)
+                {
+                    largest = left;
+                }
+
+                if (right <= heapSize && arr[right].CompareTo(arr[largest]) < 0)
+                {
+                    largest = right;
+                }
             }
 
             if (largest != index)
             {
                 Swap(arr, index, largest);
-                Heapify(arr, largest);
+                Heapify(arr, largest,o);
             }
         }
         /// <summary>
@@ -65,17 +84,17 @@ namespace DewCore.Algorithms.Sort
         /// <typeparam name="TResult">Result collection type</typeparam>
         /// <param name="coll">collection</param>
         /// <returns></returns>
-        public TResult PerformHeapSortGeneric<T, TResult>(ICollection<T> coll) where T : IComparable<T> where TResult : class, ICollection<T>, new()
+        public TResult PerformHeapSortGeneric<T, TResult>(ICollection<T> coll, Order o = Order.Asc) where T : IComparable<T> where TResult : class, ICollection<T>, new()
         {
             TResult result = new TResult();
             T[] arr = new T[coll.Count];
             coll.CopyTo(arr, 0);
-            BuildHeap(arr);
+            BuildHeap(arr,o);
             for (int i = arr.Length - 1; i >= 0; i--)
             {
                 Swap(arr, 0, i);
                 heapSize--;
-                Heapify(arr, 0);
+                Heapify(arr, 0,o);
             }
             foreach (var item in arr)
             {
@@ -83,12 +102,12 @@ namespace DewCore.Algorithms.Sort
             }
             return result;
         }
-        private void BuildHeapBaseType<T>(T[] arr) where T : IComparable
+        private void BuildHeapBaseType<T>(T[] arr, Order o) where T : IComparable
         {
             heapSize = arr.Length - 1;
             for (int i = heapSize / 2; i >= 0; i--)
             {
-                HeapifyBaseType(arr, i);
+                HeapifyBaseType(arr, i, o);
             }
         }
 
@@ -98,26 +117,39 @@ namespace DewCore.Algorithms.Sort
             arr[x] = arr[y];
             arr[y] = temp;
         }
-        private void HeapifyBaseType<T>(T[] arr, int index) where T : IComparable
+        private void HeapifyBaseType<T>(T[] arr, int index, Order o) where T : IComparable
         {
             int left = 2 * index;
             int right = 2 * index + 1;
             int largest = index;
-
-            if (left <= heapSize && arr[left].CompareTo(arr[index]) > 0)
+            if (o == Order.Asc)
             {
-                largest = left;
-            }
+                if (left <= heapSize && arr[left].CompareTo(arr[index]) > 0)
+                {
+                    largest = left;
+                }
 
-            if (right <= heapSize && arr[right].CompareTo(arr[largest]) > 0)
+                if (right <= heapSize && arr[right].CompareTo(arr[largest]) > 0)
+                {
+                    largest = right;
+                }
+            }
+            else
             {
-                largest = right;
-            }
+                if (left <= heapSize && arr[left].CompareTo(arr[index]) < 0)
+                {
+                    largest = left;
+                }
 
+                if (right <= heapSize && arr[right].CompareTo(arr[largest]) < 0)
+                {
+                    largest = right;
+                }
+            }
             if (largest != index)
             {
                 SwapBaseType(arr, index, largest);
-                HeapifyBaseType(arr, largest);
+                HeapifyBaseType(arr, largest,o);
             }
         }
         /// <summary>
@@ -127,17 +159,17 @@ namespace DewCore.Algorithms.Sort
         /// <typeparam name="TResult">Result collection type</typeparam>
         /// <param name="coll">collection</param>
         /// <returns></returns>
-        public TResult PerformHeapSortBaseType<T, TResult>(ICollection<T> coll) where T : IComparable where TResult : class, ICollection<T>, new()
+        public TResult PerformHeapSortBaseType<T, TResult>(ICollection<T> coll, Order o = Order.Asc) where T : IComparable where TResult : class, ICollection<T>, new()
         {
             TResult result = new TResult();
             T[] arr = new T[coll.Count];
             coll.CopyTo(arr, 0);
-            BuildHeapBaseType(arr);
+            BuildHeapBaseType(arr,o);
             for (int i = arr.Length - 1; i >= 0; i--)
             {
                 SwapBaseType(arr, 0, i);
                 heapSize--;
-                HeapifyBaseType(arr, 0);
+                HeapifyBaseType(arr, 0,o);
             }
             foreach (var item in arr)
             {
