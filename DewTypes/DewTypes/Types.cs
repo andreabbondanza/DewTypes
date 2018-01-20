@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DewCore.Extensions.Strings;
+using System.Reflection;
+using System.Linq;
 
 namespace DewCore.Types
 {
@@ -1493,6 +1495,96 @@ namespace DewCore.Types
             {
 
             }
+        }
+    }
+}
+namespace DewCore.Abstract.Types
+{
+    /// <summary>
+    /// A getter for anonymus types
+    /// </summary>
+    public interface IAnonymousGetter
+    {
+        /// <summary>
+        /// Return the first property of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T GetT<T>();
+        /// <summary>
+        /// Return the property with param name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="PropertyName"></param>
+        /// <returns></returns>
+        T GetT<T>(string PropertyName);
+    }
+    /// <summary>
+    /// Anonymous type
+    /// </summary>
+    public class Anonymous : IAnonymousGetter
+    {
+        /// <summary>
+        /// Wrap object
+        /// </summary>
+        /// <param name="toWrap"></param>
+        /// <returns></returns>
+        public static Anonymous Wrap(object toWrap)
+        {
+            return new Anonymous(toWrap);
+        }
+        /// <summary>
+        /// Data source
+        /// </summary>
+        public object Source { get; set; }
+        /// <summary>
+        /// Return the first property of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetT<T>()
+        {
+            var properties = Source.GetType().GetRuntimeProperties();
+            T result = default(T);
+            PropertyInfo prop = null;
+            foreach (var item in properties)
+            {
+                var a = item.PropertyType;
+                var b = typeof(T);
+                if (a == b)
+                    prop = item;
+            }
+            if (prop != null)
+                result = (T)prop.GetValue(Source);
+            else
+                throw new NotImplementedException();
+            return result;
+
+        }
+        /// <summary>
+        /// Return the property with param name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="PropertyName"></param>
+        /// <returns></returns>
+        public T GetT<T>(string PropertyName)
+        {
+            var properties = Source.GetType().GetRuntimeProperties();
+            T result = default(T);
+            var prop = properties.FirstOrDefault(x => x.Name == PropertyName);
+            if (prop != null)
+                result = (T)prop.GetValue(Source);
+            else
+                throw new NotImplementedException();
+            return result;
+        }
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="toWrap"></param>
+        public Anonymous(object toWrap)
+        {
+            Source = toWrap;
         }
     }
 }
