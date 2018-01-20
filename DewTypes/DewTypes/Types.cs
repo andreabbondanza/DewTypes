@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using DewCore.Extensions.Strings;
 
 namespace DewCore.Types
@@ -1373,6 +1377,121 @@ namespace DewCore.Types
             public string GetJson()
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+            }
+        }
+    }
+    namespace Complex
+    {
+        /// <summary>
+        /// Service interface
+        /// </summary>
+        public interface IDewLocalizer
+        {
+            /// <summary>
+            /// Return the key if string is not present
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            string GetString(string key);
+            /// <summary>
+            /// return def if string is not present
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="def"></param>
+            /// <returns></returns>
+            string GetString(string key, string def);
+            /// <summary>
+            /// return the raw dictionary
+            /// </summary>
+            /// <returns></returns>
+            Dictionary<string, string> GetInternalDictionary();
+            /// <summary>
+            /// read dictionary
+            /// </summary>
+            /// <param name="context"></param>
+            /// <returns></returns>
+            Task LoadDictionaryFromFiles(string file);
+        }
+        /// <summary>
+        /// Translator helper for middleware
+        /// </summary>
+        public class DewTranslatorService : IDewLocalizer
+        {
+            private Dictionary<string, string> _dictionary;
+            /// <summary>
+            /// Search a string into dictionary, if not found return the key (useful if you use the value as key in your default language)
+            /// </summary>
+            /// <param name="key">Key value</param>
+            /// <returns></returns>
+            public string GetString(string key)
+            {
+                var s = _dictionary.FirstOrDefault(x => x.Key == key);
+                if (s.Equals(default(KeyValuePair<string, string>)))
+                {
+                    return key;
+                }
+                return s.Value;
+            }
+            /// <summary>
+            /// Search a string into dictionary, if not found return the default
+            /// </summary>
+            /// <param name="key">Key value</param>
+            /// <param name="def">Default value</param>
+            /// <returns></returns>
+            public string GetString(string key, string def)
+            {
+                var s = _dictionary.FirstOrDefault(x => x.Key == key);
+                if (s.Equals(default(KeyValuePair<string, string>)))
+                {
+                    return def;
+                }
+                return s.Value;
+            }
+            /// <summary>
+            /// Return the key value
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            /// <exception cref="ArgumentNullException"></exception>
+            /// <exception cref="InvalidOperationException"></exception>
+            /// <exception cref="NullReferenceException"></exception>
+            public string this[string key]
+            {
+                get { return _dictionary.First(x => x.Key == key).Value; }
+            }
+            /// <summary>
+            /// Return the internal string dictionary
+            /// </summary>
+            /// <returns></returns>
+            public Dictionary<string, string> GetInternalDictionary()
+            {
+                return _dictionary;
+            }
+            /// <summary>
+            /// Read the dictionary from the file
+            /// </summary>
+            /// <param name="file"></param>
+            /// <returns></returns>
+            public async Task LoadDictionaryFromFiles(string file)
+            {
+                string localizationJson = null;
+                using (Stream stream = File.OpenRead(file))
+                {
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    {
+                        localizationJson = await streamReader.ReadToEndAsync();
+                    }
+                }
+                _dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(localizationJson);
+            }
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="options"></param>
+            /// <param name="env"></param>
+            public DewTranslatorService()
+            {
+
             }
         }
     }
