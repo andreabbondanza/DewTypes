@@ -1388,7 +1388,7 @@ namespace DewCore.Types
         /// <summary>
         /// Translator helper for middleware
         /// </summary>
-        public class DewTranslatorService : IDewLocalizer
+        public class DewLocalizer : IDewLocalizer
         {
             private Dictionary<string, string> _dictionary;
             /// <summary>
@@ -1460,7 +1460,7 @@ namespace DewCore.Types
             /// <summary>
             /// Constructor
             /// </summary>
-            public DewTranslatorService()
+            public DewLocalizer()
             {
 
             }
