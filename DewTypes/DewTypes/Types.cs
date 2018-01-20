@@ -1458,6 +1458,14 @@ namespace DewCore.Types
                 _dictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(localizationJson);
             }
             /// <summary>
+            /// Load a new dictionary (ovveride the old)
+            /// </summary>
+            /// <param name="dictionary"></param>
+            public void LoadDictionary(Dictionary<string, string> dictionary)
+            {
+                _dictionary = dictionary;
+            }
+            /// <summary>
             /// Constructor
             /// </summary>
             public DewLocalizer()
@@ -1498,6 +1506,11 @@ namespace DewCore.Abstract.Types
         /// <param name="file"></param>
         /// <returns></returns>
         Task LoadDictionaryFromFiles(string file);
+        /// <summary>
+        /// Load a new dictionary (ovveride the old)
+        /// </summary>
+        /// <param name="dictionary"></param>
+        void LoadDictionary(Dictionary<string, string> dictionary);
     }
     /// <summary>
     /// A getter for anonymus types
