@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DewCore.Extensions.Strings;
 using System.Reflection;
-using System.Linq;
+using DewCore.Abstract.Types;
 
 namespace DewCore.Types
 {
@@ -1384,36 +1384,7 @@ namespace DewCore.Types
     }
     namespace Complex
     {
-        /// <summary>
-        /// Service interface
-        /// </summary>
-        public interface IDewLocalizer
-        {
-            /// <summary>
-            /// Return the key if string is not present
-            /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
-            string GetString(string key);
-            /// <summary>
-            /// return def if string is not present
-            /// </summary>
-            /// <param name="key"></param>
-            /// <param name="def"></param>
-            /// <returns></returns>
-            string GetString(string key, string def);
-            /// <summary>
-            /// return the raw dictionary
-            /// </summary>
-            /// <returns></returns>
-            Dictionary<string, string> GetInternalDictionary();
-            /// <summary>
-            /// read dictionary
-            /// </summary>
-            /// <param name="context"></param>
-            /// <returns></returns>
-            Task LoadDictionaryFromFiles(string file);
-        }
+
         /// <summary>
         /// Translator helper for middleware
         /// </summary>
@@ -1489,8 +1460,6 @@ namespace DewCore.Types
             /// <summary>
             /// Constructor
             /// </summary>
-            /// <param name="options"></param>
-            /// <param name="env"></param>
             public DewTranslatorService()
             {
 
@@ -1500,6 +1469,36 @@ namespace DewCore.Types
 }
 namespace DewCore.Abstract.Types
 {
+    /// <summary>
+    /// Service interface
+    /// </summary>
+    public interface IDewLocalizer
+    {
+        /// <summary>
+        /// Return the key if string is not present
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string GetString(string key);
+        /// <summary>
+        /// return def if string is not present
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        string GetString(string key, string def);
+        /// <summary>
+        /// return the raw dictionary
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string, string> GetInternalDictionary();
+        /// <summary>
+        /// read dictionary
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        Task LoadDictionaryFromFiles(string file);
+    }
     /// <summary>
     /// A getter for anonymus types
     /// </summary>
