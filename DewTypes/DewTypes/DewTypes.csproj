@@ -14,9 +14,9 @@
     <PackageTags>.net standard, c#, types, string, dew</PackageTags>
     <PackageReleaseNotes>Generic localizer added</PackageReleaseNotes>
     <PackageIconUrl>http://andrewdev.eu/wp-content/uploads/2016/08/OnlyLogo.png</PackageIconUrl>
-    <Version>1.4.1</Version>
-    <AssemblyVersion>1.4.1.0</AssemblyVersion>
-    <FileVersion>1.4.1.0</FileVersion>
+    <Version>1.4.2</Version>
+    <AssemblyVersion>1.4.2.0</AssemblyVersion>
+    <FileVersion>1.4.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DewStrings" Version="2.0.0" />
+    <PackageReference Include="DewStrings" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
