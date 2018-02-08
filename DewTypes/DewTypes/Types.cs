@@ -1511,6 +1511,10 @@ namespace DewCore.Abstract.Types
         /// </summary>
         /// <param name="dictionary"></param>
         void LoadDictionary(Dictionary<string, string> dictionary);
+        /// <summary>
+        /// Reset dictionary collection
+        /// </summary>
+        void ResetDictionary();
     }
     /// <summary>
     /// A getter for anonymus types
