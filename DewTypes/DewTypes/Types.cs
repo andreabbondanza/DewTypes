@@ -1466,6 +1466,14 @@ namespace DewCore.Types
                 _dictionary = dictionary;
             }
             /// <summary>
+            /// Reset dictionary
+            /// </summary>
+            public void ResetDictionary()
+            {
+                _dictionary.Clear();
+            }
+
+            /// <summary>
             /// Constructor
             /// </summary>
             public DewLocalizer()
