@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DewCore.Extensions.Strings;
 using System.Reflection;
 using DewCore.Abstract.Types;
+using System.Reflection.Emit;
 
 namespace DewCore.Types
 {
@@ -1611,4 +1612,10 @@ namespace DewCore.Abstract.Types
             Source = toWrap;
         }
     }
+    /// <summary>
+    /// Extend object with anonymous wrapper
+    /// </summary>
+}
+namespace DewCore.Extensions.Abstract
+{
 }
