@@ -28,6 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="temp.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DewStrings" Version="2.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
