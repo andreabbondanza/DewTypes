@@ -7,6 +7,7 @@ using DewCore.Extensions.Strings;
 using System.Reflection;
 using DewCore.Abstract.Types;
 using System.Reflection.Emit;
+using System.Runtime.Serialization;
 
 namespace DewCore.Types
 {
@@ -1618,4 +1619,290 @@ namespace DewCore.Abstract.Types
 }
 namespace DewCore.Extensions.Abstract
 {
+    /// <summary>
+    /// Deep clone for object
+    /// </summary>
+    public static class CloneExtension
+    {
+        /// <summary>
+        /// Execute a deep clone, class references must be acyclic
+        /// </summary>
+        /// <param name="o"></param>        
+        /// <returns></returns>
+        public static object DeepClone(this object o)
+        {
+            var type = o.GetType();
+            if (type.IsPrimitive || type.IsEnum || type == typeof(string))
+            {
+                return o;
+            }
+            if (type.IsArray)
+            {
+                Type typeElement = Type.GetType(type.FullName.Replace("[]", string.Empty));
+                var array = o as Array;
+                var copiedArray = Array.CreateInstance(typeElement, array.Length);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    copiedArray.SetValue(array.GetValue(i).DeepClone(), i);
+                }
+                return copiedArray;
+            }
+            if (type.IsClass || type.IsValueType)
+            {
+                object copiedObject = null;
+                if (o is ICloneable)
+                    copiedObject = (o as ICloneable).Clone();
+                else
+                    copiedObject = Activator.CreateInstance(type);
+                var events = type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var field in fields)
+                {
+                    object fieldValue = field.GetValue(o);
+                    //prevent recursive stack overflow from events
+                    if (fieldValue != null && !events.Any(x => x.Name == field.Name))
+                    {
+                        field.SetValue(copiedObject, fieldValue.DeepClone());
+                    }
+                }
+                foreach (var prop in properties)
+                {
+                    object propValue = prop.GetValue(o);
+                    if (propValue != null)
+                    {
+                        if (prop.CanWrite)
+                            prop.SetValue(copiedObject, propValue.DeepClone());
+                    }
+                }
+                return copiedObject;
+            }
+            return null;
+        }
+        /// <summary>
+        /// Execute a deep copy, class references must be acyclic
+        /// </summary>
+        /// <param name="o"></param>        
+        /// <returns></returns>
+        public static object DeepCopy(object o)
+        {
+            var type = o.GetType();
+            if (type.IsPrimitive || type.IsEnum || type == typeof(string))
+            {
+                return o;
+            }
+            if (type.IsArray)
+            {
+                Type typeElement = Type.GetType(type.FullName.Replace("[]", string.Empty));
+                var array = o as Array;
+                var copiedArray = Array.CreateInstance(typeElement, array.Length);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    copiedArray.SetValue(DeepCopy(array.GetValue(i)), i);
+                }
+                return copiedArray;
+            }
+            if (type.IsClass || type.IsValueType)
+            {
+                object copiedObject = null;
+                if (o is ICloneable)
+                    copiedObject = (o as ICloneable).Clone();
+                else
+                    copiedObject = Activator.CreateInstance(type);
+                var events = type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var field in fields)
+                {
+                    object fieldValue = field.GetValue(o);
+                    //prevent recursive stack overflow from events
+                    if (fieldValue != null && !events.Any(x => x.Name == field.Name))
+                    {
+                        field.SetValue(copiedObject, DeepCopy(fieldValue));
+                    }
+                }
+                foreach (var prop in properties)
+                {
+                    object propValue = prop.GetValue(o);
+                    if (propValue != null)
+                    {
+                        if (prop.CanWrite)
+                            prop.SetValue(copiedObject, DeepCopy(propValue));
+                    }
+                }
+                return copiedObject;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Extension for anonymous utility
+    /// </summary>
+    public static class AnonymousExtension
+    {
+        /// <summary>
+        /// Return a property from an object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static T GetProperty<T>(this object obj, string property) => new Anonymous(obj).GetT<T>(property);
+    }
+    public static class DewMethod
+    {
+        public static Action Method(Action callback)
+        {
+            return callback;
+        }
+        public static Func<TResult> Function<TResult>(Func<TResult> callback)
+        {
+            return callback;
+        }
+        public static Func<T, TResult> Function<T, TResult>(T arg, Func<T, TResult> callback)
+        {
+            return callback;
+        }
+    }
+
+    /// <summary>
+    /// Extension for anonymous classes
+    /// </summary>
+    public static class DewObjectExtension
+    {
+        private static bool _firstTime = true;
+        private static AssemblyBuilder _assembly = null;
+        private static ModuleBuilder _module = null;
+        /// <summary>
+        /// Implement interface in runtime
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static T Implements<T>(this object o)
+        {
+            GenerateBase();
+            if (!typeof(T).IsInterface)
+                throw new ArgumentException();
+            var _typeBuilder = _module.DefineType(new ObjectIDGenerator().GetId(o, out _firstTime).ToString(), TypeAttributes.Public);
+            _typeBuilder.AddInterfaceImplementation(typeof(T));
+            _typeBuilder = GenerateClass(_typeBuilder, o, typeof(T));
+            TypeInfo result = _typeBuilder.CreateTypeInfo();
+            T baseClass = (T)Activator.CreateInstance(result.AsType());
+            return baseClass;
+        }
+        private static TypeBuilder GenerateClass(TypeBuilder builder, object current, Type targetInterface = null)
+        {
+            var reflection = current.GetType();
+            var iproperties = targetInterface?.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            var properties = reflection.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            var events = reflection.GetRuntimeEvents();
+            var methods = reflection.GetRuntimeMethods();
+            var fields = reflection.GetRuntimeFields();
+            foreach (var item in properties)
+            {
+                builder = CreateProperty(item, builder, item.GetCustomAttributes(true));
+            }
+            foreach (var item in iproperties)
+            {
+                builder = CreateProperty(item, builder, item.GetCustomAttributes(true), true);
+            }
+            //foreach (var item in fields)
+            //{
+            //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+            //}
+            //foreach (var item in methods)
+            //{
+            //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+            //}
+            //foreach (var item in events)
+            //{
+            //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+            //}
+            return builder;
+        }
+
+        private static TypeBuilder CreateEvent(string eName, Type eType, TypeBuilder typeBuilder, object[] attributes)
+        {
+            return null;
+        }
+        private static TypeBuilder CreateField(string fName, Type fType, TypeBuilder typeBuilder, object[] attributes)
+        {
+            return null;
+        }
+        private static TypeBuilder CreateMethod(string mName, Type mType, TypeBuilder typeBuilder, object[] attributes)
+        {
+            return null;
+        }
+        private static TypeBuilder CreateProperty(PropertyInfo prop, TypeBuilder typeBuilder, object[] attributes, bool extend = false)
+        {
+            FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + prop.Name.Camelize(), prop.PropertyType, FieldAttributes.Private);
+            PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(prop.Name, PropertyAttributes.HasDefault, prop.PropertyType, null);
+
+            if (prop.CanRead)
+            {
+                MethodBuilder getPropMthdBldr = typeBuilder.DefineMethod("get_" + prop.Name,
+                                                                               MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                                                                              prop.PropertyType, Type.EmptyTypes);
+                ILGenerator getIl = getPropMthdBldr.GetILGenerator();
+                MethodInfo getMethodInfo = prop.GetGetMethod();
+
+                getIl.Emit(OpCodes.Ldarg_0);
+                getIl.Emit(OpCodes.Ldfld, fieldBuilder);
+                getIl.Emit(OpCodes.Ret);
+
+                propertyBuilder.SetGetMethod(getPropMthdBldr);
+                if (extend)
+                    typeBuilder.DefineMethodOverride(getPropMthdBldr, getMethodInfo);
+
+            }
+
+            if (prop.CanWrite)
+            {
+                MethodBuilder setPropMthdBldr = typeBuilder.DefineMethod("set_" + prop.Name,
+                                                                  MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                                                                  null, new[] { prop.PropertyType });
+
+                ILGenerator setIl = setPropMthdBldr.GetILGenerator();
+                MethodInfo setMethodInfo = prop.GetSetMethod();
+
+                setIl.Emit(OpCodes.Ldarg_0);      // Load "this"
+                setIl.Emit(OpCodes.Ldarg_1);      // Load "value" onto the stack
+                setIl.Emit(OpCodes.Stfld, fieldBuilder);
+                setIl.Emit(OpCodes.Ret);          // Return nothing
+                propertyBuilder.SetSetMethod(setPropMthdBldr);
+                if (extend)
+                    typeBuilder.DefineMethodOverride(setPropMthdBldr, setMethodInfo);
+            }
+            List<CustomAttributeBuilder> cBuilders = new List<CustomAttributeBuilder>();
+            foreach (var item in attributes)
+            {
+                cBuilders.Add(new CustomAttributeBuilder(item.GetType().GetConstructor(Type.EmptyTypes), Type.EmptyTypes));
+            }
+            if (cBuilders.Count > 0)
+            {
+                foreach (var item in cBuilders)
+                {
+                    propertyBuilder.SetCustomAttribute(item);
+                }
+            }
+
+
+            return typeBuilder;
+        }
+
+        private static void GenerateBase()
+        {
+            if (_assembly is null)
+            {
+                AssemblyName aname = new AssemblyName("_dewClassBuilder");
+                _assembly = AssemblyBuilder.DefineDynamicAssembly(aname, AssemblyBuilderAccess.Run);
+                _module = _assembly.DefineDynamicModule("_dewClassBuilder" + "_mod");
+            }
+        }
+    }
+
+
+
 }
