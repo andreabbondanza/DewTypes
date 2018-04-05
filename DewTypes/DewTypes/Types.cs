@@ -1327,6 +1327,10 @@ namespace DewCore.Types
         public class StandardResponse
         {
             /// <summary>
+            /// Error description
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
             /// Data
             /// </summary>
             public object Data { get; set; } = null;
