@@ -1366,6 +1366,10 @@ namespace DewCore.Types
             /// </summary>
             public T Data { get; set; } = null;
             /// <summary>
+            /// Error description
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
             /// Error response 
             /// </summary>
             public StandardResponseError Error { get; set; } = new StandardResponseError();
