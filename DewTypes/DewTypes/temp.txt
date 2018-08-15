@@ -1,0 +1,401 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DewTypes
+{
+    class temp
+    {
+        using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleApp2
+    {
+        class Class1
+        {/// <summary>
+         /// Extension for anonymous utility
+         /// </summary>
+            public static class AnonymousExtension
+            {
+                /// <summary>
+                /// Return a property from an object
+                /// </summary>
+                /// <typeparam name="T"></typeparam>
+                /// <param name="obj"></param>
+                /// <param name="property"></param>
+                /// <returns></returns>
+                public static T GetProperty<T>(this object obj, string property) => new Anonymous(obj).GetT<T>(property);
+            }
+            public static class DewMethod
+            {
+                public static Action Method(Action callback)
+                {
+                    return callback;
+                }
+                public static Func<TResult> Function<TResult>(Func<TResult> callback)
+                {
+                    return callback;
+                }
+                public static Func<T, TResult> Function<T, TResult>(T arg, Func<T, TResult> callback)
+                {
+                    return callback;
+                }
+            }
+
+            /// <summary>
+            /// Extension for anonymous classes
+            /// </summary>
+            public static class DewObjectExtension
+            {
+                private static long _idGenerator = 1;
+                private static bool _firstTime = true;
+                private static AssemblyBuilder _assembly = null;
+                private static ModuleBuilder _module = null;
+                public static T Like<T>(this object o) => (T)o;
+
+                /// <summary>
+                /// Implement interface in runtime
+                /// </summary>
+                /// <typeparam name="T"></typeparam>
+                /// <param name="o"></param>
+                /// <returns></returns>
+                public static T Implements<T>(this object o)
+                {
+                    GenerateBase();
+                    if (!typeof(T).IsInterface)
+                        throw new ArgumentException();
+                    var _typeBuilder = _module.DefineType("_dew_XFClass_id_" + _idGenerator++, TypeAttributes.Public);
+                    _typeBuilder.SetParent(o.GetType());
+                    _typeBuilder.AddInterfaceImplementation(typeof(T));
+                    _typeBuilder = GenerateInterface(_typeBuilder, typeof(T), o);
+                    TypeInfo result = _typeBuilder.CreateTypeInfo();
+                    T baseClass = (T)Activator.CreateInstance(result.AsType());
+                    return baseClass;
+                }
+                /// <summary>
+                /// Extend a class in runtime
+                /// </summary>
+                /// <typeparam name="T"></typeparam>
+                /// <param name="o"></param>
+                /// <returns></returns>
+                public static T Extends<T>(this object o) where T : class
+                {
+                    GenerateBase();
+                    var _typeBuilder = _module.DefineType("_dew_XFClass_id_" + _idGenerator++, TypeAttributes.Public);
+                    _typeBuilder.SetParent(typeof(T));
+                    //_typeBuilder = GenerateClass(_typeBuilder, o, typeof(T));
+                    TypeInfo result = _typeBuilder.CreateTypeInfo();
+                    T baseClass = (T)Activator.CreateInstance(result.AsType());
+                    return baseClass;
+                }
+                private static TypeBuilder GenerateInterface(TypeBuilder builder, Type targetInterface, object currentObject)
+                {
+                    var iproperties = targetInterface?.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    var imethods = targetInterface?.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    var copro = currentObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    var cofie = currentObject.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    List<string> mProps = new List<string>();
+                    foreach (var item in iproperties)
+                    {
+                        builder = CreateProperty(item, builder, item.GetCustomAttributes(true), ref mProps, true);
+                    }
+                    foreach (var item in imethods.Where(x => !mProps.Exists(y => y == x.Name)))
+                    {
+                        if (cofie.Any(x => x.Name == item.Name) || copro.Any(x => x.Name == item.Name))
+                        {
+                            MemberInfo del = cofie.FirstOrDefault(x => x.Name == item.Name);
+                            if (del == default(FieldInfo))
+                                del = copro.First(x => x.Name == item.Name);
+                            PropertyInfo delp = null;
+                            FieldInfo delf = null;
+                            if (del is PropertyInfo)
+                            {
+                                delp = del as PropertyInfo;
+                            }
+                            else
+                            {
+                                delf = del as FieldInfo;
+                            }
+                            if (delf != null)
+                            {
+                                if (delf.GetValue(currentObject) is Delegate)
+                                {
+                                    var temp = delf.GetValue(currentObject) as Delegate;
+                                    bool isSame = true;
+                                    if (temp.Method.ReturnType != item.ReturnType) isSame = false;
+                                    var mp = temp.Method.GetParameters();
+                                    var mp1 = item.GetParameters();
+                                    if (mp.Length != mp1.Length) isSame = false;
+                                    else
+                                        for (int i = 0; i < mp.Length; i++)
+                                        {
+                                            if (mp[i] != mp1[i]) isSame = false;
+                                        }
+                                    if (isSame)
+                                    {
+                                        temp.DynamicInvoke();
+                                        builder = CreateMethod(item, temp, builder, item.GetCustomAttributes(true), true);
+                                    }
+                                }
+                            }
+                            else
+                                if (delp != null) { }
+                            else
+                                builder = CreateMethod(item, builder, item.GetCustomAttributes(true), true);
+                        }
+                        else
+                            builder = CreateMethod(item, builder, item.GetCustomAttributes(true), true);
+                    }
+                    //foreach (var item in events)
+                    //{
+                    //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+                    //}
+                    return builder;
+                }
+                private static TypeBuilder GenerateClass(TypeBuilder builder, object current, Type targetInterface = null)
+                {
+                    var reflection = current.GetType();
+                    List<string> mProps = null;
+                    var iproperties = targetInterface?.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    var properties = reflection.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    var events = reflection.GetRuntimeEvents();
+                    var methods = reflection.GetRuntimeMethods();
+                    var fields = reflection.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    var ifields = targetInterface?.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+                    foreach (var item in properties)
+                    {
+                        builder = CreateProperty(item, builder, item.GetCustomAttributes(true), ref mProps);
+                    }
+                    foreach (var item in iproperties)
+                    {
+                        builder = CreateProperty(item, builder, item.GetCustomAttributes(true), ref mProps, true);
+                    }
+                    foreach (var item in fields)
+                    {
+                        builder = CreateField(item, builder, item.GetCustomAttributes(true));
+                    }
+                    foreach (var item in ifields)
+                    {
+                        builder = CreateField(item, builder, item.GetCustomAttributes(true), true);
+                    }
+                    //foreach (var item in methods)
+                    //{
+                    //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+                    //}
+                    //foreach (var item in events)
+                    //{
+                    //    builder = CreateProperty(item.Name, item.PropertyType, builder, item.GetValue(current));
+                    //}
+                    return builder;
+                }
+
+                private static TypeBuilder CreateEvent(string eName, Type eType, TypeBuilder typeBuilder, object[] attributes)
+                {
+                    return null;
+                }
+                private static TypeBuilder CreateField(FieldInfo prop, TypeBuilder typeBuilder, object[] attributes, bool extend = false)
+                {
+                    FieldAttributes visibility = FieldAttributes.Public;
+                    if (prop.IsPrivate)
+                        visibility = FieldAttributes.Private;
+                    FieldBuilder fieldBuilder = typeBuilder.DefineField(prop.Name, prop.FieldType, visibility);
+                    List<CustomAttributeBuilder> cBuilders = new List<CustomAttributeBuilder>();
+                    foreach (var item in attributes)
+                    {
+                        try
+                        {
+                            cBuilders.Add(new CustomAttributeBuilder(item.GetType().GetConstructor(Type.EmptyTypes), Type.EmptyTypes));
+                        }
+                        catch
+                        {
+                            //Can create only attributes with default constructor, otherwise we don't have the values                    
+                        }
+                    }
+                    if (cBuilders.Count > 0)
+                    {
+                        foreach (var item in cBuilders)
+                        {
+                            fieldBuilder.SetCustomAttribute(item);
+                        }
+                    }
+                    return typeBuilder;
+                }
+                private static TypeBuilder CreateMethod(MethodInfo method, Delegate toCopy, TypeBuilder typeBuilder, object[] attributes, bool extend = false)
+                {
+                    Type returnType = method.ReturnType;
+
+                    List<Type> argumentTypes = new List<Type>();
+                    foreach (ParameterInfo parameterInfo in method.GetParameters())
+                        argumentTypes.Add(parameterInfo.ParameterType);
+
+                    // Define the method
+                    MethodBuilder methodBuilder = typeBuilder.DefineMethod
+                        (method.Name, MethodAttributes.Public |
+                        MethodAttributes.Virtual, returnType, argumentTypes.ToArray());
+
+                    // The ILGenerator class is used to put op-codes
+                    // (similar to assembly) into the method
+                    var ilGenerator = methodBuilder.GetILGenerator();
+
+                    switch (method.GetParameters().Length)
+                    {
+                        case 0:
+                            ilGenerator.Emit(OpCodes.Ldarg_0);
+                            break;
+                        case 1:
+                            ilGenerator.Emit(OpCodes.Ldarg_1);
+                            break;
+                        case 2:
+                            ilGenerator.Emit(OpCodes.Ldarg_1);
+                            ilGenerator.Emit(OpCodes.Ldarg_2);
+                            break;
+                        case 3:
+                            ilGenerator.Emit(OpCodes.Ldarg_1);
+                            ilGenerator.Emit(OpCodes.Ldarg_2);
+                            ilGenerator.Emit(OpCodes.Ldarg_3);
+                            break;
+                        default:
+                            ilGenerator.Emit(OpCodes.Ldarg_1);
+                            ilGenerator.Emit(OpCodes.Ldarg_2);
+                            ilGenerator.Emit(OpCodes.Ldarg_3);
+                            for (int i = 5 - 1; i < method.GetParameters().Length; i++)
+                            {
+                                ilGenerator.Emit(OpCodes.Ldarg, toCopy.Method.GetParameters().Select(x => x.ParameterType).ToArray()[i]);
+                            }
+                            break;
+                    }
+                    var toInvoke = toCopy.GetType().GetMethods().First(x => x.Name == "Invoke");
+
+                    //ilGenerator.EmitCall(OpCodes.Callvirt, toCopy, argumentTypes.ToArray());
+                    ilGenerator.Emit(OpCodes.Callvirt, toInvoke);
+                    if (returnType != typeof(void))
+                    {
+                        // this declares the local object, int, long, float, etc.
+                        LocalBuilder localBuilder = ilGenerator.DeclareLocal(returnType);
+                        // load the value on the stack to return
+                        ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+                    }
+                    ilGenerator.Emit(OpCodes.Ret);                       // return
+
+                    // We need to associate our new type's method with the method in the interface
+                    typeBuilder.DefineMethodOverride(methodBuilder, method);
+
+                    return typeBuilder;
+                }
+                private static TypeBuilder CreateMethod(MethodInfo method, TypeBuilder typeBuilder, object[] attributes, bool extend = false)
+                {
+                    Type returnType = method.ReturnType;
+
+                    List<Type> argumentTypes = new List<Type>();
+                    foreach (ParameterInfo parameterInfo in method.GetParameters())
+                        argumentTypes.Add(parameterInfo.ParameterType);
+
+                    // Define the method
+                    MethodBuilder methodBuilder = typeBuilder.DefineMethod
+                        (method.Name, MethodAttributes.Public |
+                        MethodAttributes.Virtual, returnType, argumentTypes.ToArray());
+
+                    // The ILGenerator class is used to put op-codes
+                    // (similar to assembly) into the method
+                    var ilGenerator = methodBuilder.GetILGenerator();
+
+                    // If there's a return type, create a default value or null to return
+                    if (returnType != typeof(void))
+                    {
+                        // this declares the local object, int, long, float, etc.
+                        LocalBuilder localBuilder = ilGenerator.DeclareLocal(returnType);
+                        // load the value on the stack to return
+                        ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+                    }
+
+                    ilGenerator.Emit(OpCodes.Ret);                       // return
+
+                    // We need to associate our new type's method with the method in the interface
+                    typeBuilder.DefineMethodOverride(methodBuilder, method);
+
+                    return typeBuilder;
+                }
+                private static TypeBuilder CreateProperty(PropertyInfo prop, TypeBuilder typeBuilder, object[] attributes, ref List<string> mProp, bool extend = false)
+                {
+                    FieldBuilder fieldBuilder = typeBuilder.DefineField("_" + prop.Name.Camelize(), prop.PropertyType, FieldAttributes.Private);
+                    PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(prop.Name, PropertyAttributes.HasDefault, prop.PropertyType, null);
+                    if (prop.CanRead)
+                    {
+                        MethodBuilder getPropMthdBldr = typeBuilder.DefineMethod("get_" + prop.Name,
+                                                                                       MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                                                                                      prop.PropertyType, Type.EmptyTypes);
+                        ILGenerator getIl = getPropMthdBldr.GetILGenerator();
+                        MethodInfo getMethodInfo = prop.GetGetMethod();
+
+                        getIl.Emit(OpCodes.Ldarg_0);
+                        getIl.Emit(OpCodes.Ldfld, fieldBuilder);
+                        getIl.Emit(OpCodes.Ret);
+
+                        propertyBuilder.SetGetMethod(getPropMthdBldr);
+                        if (extend)
+                            typeBuilder.DefineMethodOverride(getPropMthdBldr, getMethodInfo);
+                        mProp?.Add("get_" + prop.Name);
+                    }
+
+                    if (prop.CanWrite)
+                    {
+                        MethodBuilder setPropMthdBldr = typeBuilder.DefineMethod("set_" + prop.Name,
+                                                                          MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                                                                          null, new[] { prop.PropertyType });
+
+                        ILGenerator setIl = setPropMthdBldr.GetILGenerator();
+                        MethodInfo setMethodInfo = prop.GetSetMethod();
+
+                        setIl.Emit(OpCodes.Ldarg_0);      // Load "this"
+                        setIl.Emit(OpCodes.Ldarg_1);      // Load "value" onto the stack
+                        setIl.Emit(OpCodes.Stfld, fieldBuilder);
+                        setIl.Emit(OpCodes.Ret);          // Return nothing
+                        propertyBuilder.SetSetMethod(setPropMthdBldr);
+                        if (extend)
+                            typeBuilder.DefineMethodOverride(setPropMthdBldr, setMethodInfo);
+                        mProp?.Add("set_" + prop.Name);
+                    }
+                    List<CustomAttributeBuilder> cBuilders = new List<CustomAttributeBuilder>();
+                    foreach (var item in attributes)
+                    {
+                        try
+                        {
+                            cBuilders.Add(new CustomAttributeBuilder(item.GetType().GetConstructor(Type.EmptyTypes), Type.EmptyTypes));
+                        }
+                        catch
+                        {
+                            //Can create only attributes with default constructor, otherwise we don't have the values
+                        }
+                    }
+                    if (cBuilders.Count > 0)
+                    {
+                        foreach (var item in cBuilders)
+                        {
+                            propertyBuilder.SetCustomAttribute(item);
+                        }
+                    }
+                    return typeBuilder;
+                }
+                private static void GenerateBase()
+                {
+                    if (_assembly is null)
+                    {
+                        AssemblyName aname = new AssemblyName("_dewClassBuilder");
+                        Assembly.GetExecutingAssembly().LoadModule("").
+                        _assembly = AssemblyBuilder.DefineDynamicAssembly(aname, AssemblyBuilderAccess.Run);
+
+
+                        _module = _assembly.DefineDynamicModule("_dewClassBuilder" + "_mod");
+                    }
+                }
+            }
+
+
+
+
+        }
+    }
+
+}
+}

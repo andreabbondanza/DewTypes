@@ -1381,6 +1381,18 @@ namespace DewCore.Types
             {
                 return Newtonsoft.Json.JsonConvert.SerializeObject(this);
             }
+            /// <summary>
+            /// Convert T instance into object instance
+            /// </summary>
+            /// <returns></returns>
+            public StandardResponse Convert()
+            {
+                return new StandardResponse()
+                {
+                    Data = this.Data,
+                    Error = this.Error,
+                };
+            }
         }
     }
     namespace Complex
