@@ -1399,8 +1399,14 @@ namespace DewCore.Types
                 {
                     Data = this.Data,
                     Error = this.Error,
+                    ErrorMessage = this.ErrorMessage
                 };
             }
+            /// <summary>
+            /// Implicit cast to standardresponse
+            /// </summary>
+            /// <param name="resp"></param>
+            public static implicit operator StandardResponse(StandardResponse<T> resp) => resp.Convert();
         }
     }
     namespace Complex

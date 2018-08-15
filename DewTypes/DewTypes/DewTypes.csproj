@@ -12,9 +12,9 @@
     <RepositoryUrl>https://github.com/andreabbondanza/DewTypes</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>.net standard, c#, types, string, dew</PackageTags>
-    <PackageReleaseNotes>Converter for standardresponse</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed errormessage</PackageReleaseNotes>
     <PackageIconUrl>http://andrewdev.eu/wp-content/uploads/2016/08/OnlyLogo.png</PackageIconUrl>
-    <Version>1.5.3</Version>
+    <Version>1.5.4</Version>
     <AssemblyVersion>1.5.0.0</AssemblyVersion>
     <FileVersion>1.5.0.0</FileVersion>
   </PropertyGroup>
