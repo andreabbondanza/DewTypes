@@ -1327,6 +1327,10 @@ namespace DewCore.Types
         public class StandardResponse
         {
             /// <summary>
+            /// Error description
+            /// </summary>
+            public string ErrorMessage { get; set; }
+            /// <summary>
             /// Data
             /// </summary>
             public object Data { get; set; } = null;
@@ -1361,6 +1365,10 @@ namespace DewCore.Types
             /// Data
             /// </summary>
             public T Data { get; set; } = null;
+            /// <summary>
+            /// Error description
+            /// </summary>
+            public string ErrorMessage { get; set; }
             /// <summary>
             /// Error response 
             /// </summary>
